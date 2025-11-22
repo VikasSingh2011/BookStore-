@@ -17,7 +17,7 @@ function Login() {
       email: data.email, //accessing email field from the form
       password: data.password, //accessing password field from the form
     };
-    await axios.post("http://localhost:4001/user/login", userInfo)//here we are sending the data to backend
+    await axios.post("http://localhost:4000/user/login", userInfo)//here we are sending the data to backend
       .then((res) => {
         console.log(res.data);
         if (res.data) {

@@ -24,7 +24,7 @@ function Signup() {
       password: data.password, //accessing password field from the form
     };
     await axios
-      .post("http://localhost:4001/user/signup", userInfo) //here we are sending the data to backend
+      .post("http://localhost:4000/user/signup", userInfo) //here we are sending the data to backend
       .then((res) => {
         console.log(res.data);
         if (res.data) {

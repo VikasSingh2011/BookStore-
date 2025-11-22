@@ -1,29 +1,34 @@
 import React from "react";
-import banner from "../../public/Banner.png";
 
 const Banner = () => {
   return (
     <>
-      <div className=" max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col md:flex-row my-10  ">
-        <div className="w-full order-2 md:order-1 md:w-1/2 mt-12 md:mt-32  ">
-          <div className="space-y-12 ">
+      <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 flex flex-col md:flex-row my-10">
+        <div className="w-full order-2 md:order-1 md:w-1/2 mt-12 md:mt-32">
+          <div className="space-y-12">
             <h1 className="text-4xl font-bold">
               Hello, welcomes here to learn something{" "}
-              <span className="text-pink-500">new everyday!!!</span>{" "}
+              <span className="text-pink-500">new everyday!!!</span>
             </h1>
+
             <p className="text-xl">
               Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dolor,
               et totam. Tempora amet atque expedita, quae corrupti totam sed
               pariatur corporis at veniam est voluptas animi!
             </p>
+
             <div className="hidden md:block">
               <label className="px-3 py-2 border rounded-md flex items-center gap-2">
-                <input type="text" className="grow outline-none dark:bg-slate-900 dark:text-white" placeholder="Search" />
+                <input
+                  type="text"
+                  className="grow outline-none dark:bg-slate-900 dark:text-white"
+                  placeholder="Search"
+                />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 16 16"
                   fill="currentColor"
-                  className="h-4 w-4 opacity-70 "
+                  className="h-4 w-4 opacity-70"
                 >
                   <path
                     fillRule="evenodd"
@@ -34,10 +39,13 @@ const Banner = () => {
               </label>
             </div>
           </div>
+
           <button className="btn mt-6 btn-secondary">Get Started</button>
         </div>
-        <div className="order-1 w-full md:w-1/2">
-        <img src={banner} className="w-92 h-92 " alt="" />
+
+        <div className="order-1 w-full md:w-1/2 flex justify-center items-center">
+          {/* ✅ Correct way to use public folder image in Vite */}
+          <img src="/Banner.png" className="w-full h-auto" alt="Banner" />
         </div>
       </div>
     </>
