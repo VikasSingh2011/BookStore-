@@ -15,7 +15,6 @@ const __dirname = path.dirname(__filename);
 const app = express(); //create an express application
 
 app.use(express.json()); //using express json middleare to parse json data in request body.
-
 app.use(cors()); //using cors middleware to handle cross origin requests
 
 const PORT = process.env.PORT || 4000; //this is default port if .env file is not working
@@ -23,26 +22,19 @@ const URI = process.env.MongoDBURI; //mongoDB connection string
 
 //connect to mongoDB
 try {
-  mongoose.connect(URI, {
-    //commentout because now warning is not coming in latest mongoose version
-    //useNewUrlParser: true,//to avoid deprecation warnings
-    //useUnifiedTopology: true//to avoid deprecation warnings
-  });
+  mongoose.connect(URI);
   console.log("Connected to MongoDB");
 } catch (error) {
   console.log("Error: ", error);
 }
 
-//defining  routes
+//defining routes
 app.use("/book", bookRoute); //here we are using book routes
 app.use("/user", userRoute); //here we are using user routes
 
-// serve Vite frontend static files
-app.use(express.static(path.join(__dirname, "dist")));
-
-// catch-all route to serve index.html for client-side routing
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+//  Minimal addition: root route
+app.get("/", (req, res) => {
+  res.send("Backend is running 🚀");
 });
 
 app.listen(PORT, () => {
