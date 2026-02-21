@@ -6,19 +6,21 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function Course() {
-  const [book, setBook] = useState([])//here book is variable and setBook is function to update the variable
-  useEffect(() => {//now we call our backend api to get data
-    const getBook = async()=>{//here we created an async function
-      try{
-        const res = await axios.get("http://localhost:4000/book");//here we call the backend api.
+  const [book, setBook] = useState([]); //here book is variable and setBook is function to update the variable
+  useEffect(() => {
+    //now we call our backend api to get data
+    const getBook = async () => {
+      //here we created an async function
+      try {
+        const res = await axios.get("https://bookstore-hqyk.onrender.com/book"); //here we call the backend api.
         console.log(res.data);
-        setBook(res.data);//here we update the book variable with data from backend
-      } catch(error){
-        console.log(Error)
+        setBook(res.data); //here we update the book variable with data from backend
+      } catch (error) {
+        console.log(Error);
       }
-    }
-    getBook();//calling the function
-  },[])//here we pass empty array so that it runs only once 
+    };
+    getBook(); //calling the function
+  }, []); //here we pass empty array so that it runs only once
   return (
     <>
       <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 pt-20">

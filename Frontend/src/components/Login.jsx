@@ -17,25 +17,26 @@ function Login() {
       email: data.email, //accessing email field from the form
       password: data.password, //accessing password field from the form
     };
-    await axios.post("http://localhost:4000/user/login", userInfo)//here we are sending the data to backend
+    await axios
+      .post("https://bookstore-hqyk.onrender.com/user/login", userInfo) //here we are sending the data to backend
       .then((res) => {
         console.log(res.data);
         if (res.data) {
           //alert("Loggedin Successfully");//now we use toast instend of alert
           toast.success("Loggedin Successfully");
-          document.getElementById("my_modal_3").close();//to close the modal after login
-          setTimeout(() => { 
-            window.location.reload();//to reload the page after login
+          document.getElementById("my_modal_3").close(); //to close the modal after login
+          setTimeout(() => {
+            window.location.reload(); //to reload the page after login
             localStorage.setItem("Users", JSON.stringify(res.data.user));
-          }, 1000);//to close the model after 3 sec
+          }, 1000); //to close the model after 3 sec
         }
       })
       .catch((err) => {
-        if(err.response){
+        if (err.response) {
           console.log(err);
           //alert("Error: " + err.response.data.message);//here also use toast
           toast.error("Error: " + err.response.data.message);
-          setTimeout(( )=>{},2000);//to close the model after 3 sec
+          setTimeout(() => {}, 2000); //to close the model after 3 sec
         }
       });
   };
@@ -44,17 +45,18 @@ function Login() {
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box dark:bg-slate-900 dark:text-white">
         <form onSubmit={handleSubmit(onSubmit)} method="dialog">
-        {/* ❌ Remove method="dialog" – it closes modal automatically */}
-        <Link to="/"
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => document.getElementById("my_modal_3").close()}
-        >
-          ✕
-        </Link>
+          {/* ❌ Remove method="dialog" – it closes modal automatically */}
+          <Link
+            to="/"
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            onClick={() => document.getElementById("my_modal_3").close()}
+          >
+            ✕
+          </Link>
 
-        <h3 className="font-bold text-lg">Login</h3>
+          <h3 className="font-bold text-lg">Login</h3>
 
-        {/* ✅ Form wrapper */}
+          {/* ✅ Form wrapper */}
 
           {/* Email */}
           <div className="mt-4 space-y-2">
@@ -66,8 +68,12 @@ function Login() {
               className="w-80 px-3 py-1 border rounded-md outline-none dark:bg-slate-900 dark:text-white"
               {...register("email", { required: true })}
             />
-            <br/>
-            {errors.email && <span className="text-sm text-red-500">This field is required</span>}
+            <br />
+            {errors.email && (
+              <span className="text-sm text-red-500">
+                This field is required
+              </span>
+            )}
           </div>
 
           {/* Password */}
@@ -80,8 +86,12 @@ function Login() {
               className="w-80 px-3 py-1 border rounded-md outline-none dark:bg-slate-900 dark:text-white"
               {...register("password", { required: true })}
             />
-            <br/>
-            {errors.password && <span className="text-sm text-red-500">This field is required</span>}
+            <br />
+            {errors.password && (
+              <span className="text-sm text-red-500">
+                This field is required
+              </span>
+            )}
           </div>
 
           {/* Buttons */}
@@ -104,7 +114,6 @@ function Login() {
               </Link>
             </p>
           </div>
-
         </form>
       </div>
     </dialog>

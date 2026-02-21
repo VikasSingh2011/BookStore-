@@ -24,18 +24,18 @@ function Signup() {
       password: data.password, //accessing password field from the form
     };
     await axios
-      .post("http://localhost:4000/user/signup", userInfo) //here we are sending the data to backend
+      .post("https://bookstore-hqyk.onrender.com/user/signup", userInfo) //here we are sending the data to backend
       .then((res) => {
         console.log(res.data);
         if (res.data) {
           //alert("Signup Successful");//we use toast instead of alert
           toast.success("Signup Successfully");
-          navigate(from,{replace:true});
+          navigate(from, { replace: true });
         }
         localStorage.setItem("Users", JSON.stringify(res.data.user));
       })
       .catch((err) => {
-        if(err.response){
+        if (err.response) {
           console.log(err);
           //alert("Error: " + err.response.data.message);//here also use toast
           toast.error("Error: " + err.response.data.message);
