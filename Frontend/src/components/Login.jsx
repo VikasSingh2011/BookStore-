@@ -3,10 +3,8 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthProvider";
 
 function Login() {
-  const [authUser, setAuthUser] = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,24 +13,30 @@ function Login() {
 
   const onSubmit = async (data) => {
     const userInfo = {
-      email: data.email,
-      password: data.password,
+      //here we are creating an object to send the data to backend
+      email: data.email, //accessing email field from the form
+      password: data.password, //accessing password field from the form
     };
-    await axios.post("http://localhost:4001/user/login", userInfo)
+    await axios
+      .post("https://bookstore-hqyk.onrender.com/user/login", userInfo) //here we are sending the data to backend
       .then((res) => {
         console.log(res.data);
         if (res.data) {
-          toast.success("Logged in Successfully");
-          localStorage.setItem("Users", JSON.stringify(res.data.user));
-          setAuthUser(res.data.user);
-          const modal = document.getElementById("my_modal_3");
-          if (modal) modal.close();
+          //alert("Loggedin Successfully");//now we use toast instend of alert
+          toast.success("Loggedin Successfully");
+          document.getElementById("my_modal_3").close(); //to close the modal after login
+          setTimeout(() => {
+            window.location.reload(); //to reload the page after login
+            localStorage.setItem("Users", JSON.stringify(res.data.user));
+          }, 1000); //to close the model after 3 sec
         }
       })
       .catch((err) => {
         if (err.response) {
           console.log(err);
+          //alert("Error: " + err.response.data.message);//here also use toast
           toast.error("Error: " + err.response.data.message);
+          setTimeout(() => {}, 2000); //to close the model after 3 sec
         }
       });
   };
@@ -95,7 +99,7 @@ function Login() {
             {/* ✅ Must be type="submit" */}
             <button
               type="submit"
-              className="bg-blue-600 text-white rounded-md px-3 py-1 hover:bg-blue-700 duration-200"
+              className="bg-pink-500 text-white rounded-md px-3 py-1 hover:bg-pink-700 duration-200"
             >
               Login
             </button>

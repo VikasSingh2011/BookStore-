@@ -4,10 +4,8 @@ import Login from "./Login";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthProvider";
 
 function Signup() {
-  const [authUser, setAuthUser] = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
@@ -20,24 +18,26 @@ function Signup() {
 
   const onSubmit = async (data) => {
     const userInfo = {
-      fullname: data.fullname,
-      email: data.email,
-      password: data.password,
+      //here we are creating an object to send the data to backend
+      fullname: data.fullname, //accessing name field from the form
+      email: data.email, //accessing email field from the form
+      password: data.password, //accessing password field from the form
     };
     await axios
-      .post("http://localhost:4001/user/signup", userInfo)
+      .post("https://bookstore-hqyk.onrender.com/user/signup", userInfo) //here we are sending the data to backend
       .then((res) => {
         console.log(res.data);
         if (res.data) {
+          //alert("Signup Successful");//we use toast instead of alert
           toast.success("Signup Successfully");
-          localStorage.setItem("Users", JSON.stringify(res.data.user));
-          setAuthUser(res.data.user);
           navigate(from, { replace: true });
         }
+        localStorage.setItem("Users", JSON.stringify(res.data.user));
       })
       .catch((err) => {
         if (err.response) {
           console.log(err);
+          //alert("Error: " + err.response.data.message);//here also use toast
           toast.error("Error: " + err.response.data.message);
         }
       });
@@ -113,7 +113,7 @@ function Signup() {
 
             {/* Buttons */}
             <div className="flex justify-around mt-4">
-              <button className="bg-blue-600 text-white rounded-md px-3 py-1 hover:bg-blue-700 duration-200">
+              <button className="bg-pink-500 text-white rounded-md px-3 py-1 hover:bg-pink-700 duration-200">
                 Signup
               </button>
 

@@ -4,7 +4,7 @@ export const AuthContext = createContext();//here exporting AuthContext
 export default function AuthProvider({children}){//create AuthProvider function
   const initialAuthUser = localStorage.getItem("Users");//here we are getting the user data from local storage
   const [authUser,setAuthUser]=useState(
-    initialAuthUser ? JSON.parse(initialAuthUser): null
+    initialAuthUser ? JSON.parse(initialAuthUser): undefined
   );
   return(
     <AuthContext.Provider value={[authUser,setAuthUser]}>

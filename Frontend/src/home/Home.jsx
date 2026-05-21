@@ -12,6 +12,9 @@ function Home() {
       <Banner />
       <Freebook />
       <Footer />
+
+      {/* ✅ MUST EXIST IN DOM FOR showModal() to work */}
+      <Login />
     </>
   );
 }
