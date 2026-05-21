@@ -16,9 +16,9 @@ function Course() {
       } catch(error){
         console.log(error)
       }
-    }
-    getBook();//calling the function
-  },[])//here we pass empty array so that it runs only once 
+    };
+    getBook(); //calling the function
+  }, []); //here we pass empty array so that it runs only once
   return (
     <>
       <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 pt-28 pb-16">

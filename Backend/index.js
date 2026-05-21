@@ -8,12 +8,16 @@ import bookRoute from "./route/book.route.js";//importing book routes
 import userRoute from "./route/user.route.js";//importing user routes
 import Book from "./model/book.model.js";
 
-const app = express();//create an express application
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-app.use(express.json());//using express json middleare to parse json data in request body.
+const app = express();
 
+app.use(express.json());
+app.use(cors());
 
-app.use(cors());//using cors middleware to handle cross origin requests 
+const PORT = process.env.PORT || 4000;
+const URI = process.env.MongoDBURI;
 
 dotenv.config();//configure dotenv to use .env file
 
@@ -115,9 +119,14 @@ mongoose.connect(URI)
     console.log("Error connecting to MongoDB: ", error);
   });
 
-//defining  routes
-app.use("/book",bookRoute);//here we are using book routes
-app.use("/user",userRoute);//here we are using user routes
+app.use("/book", bookRoute);
+app.use("/user", userRoute);
+
+//  Serve frontend build (same as local)
+app.use(express.static(path.join(__dirname, "dist")));
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 //deployment code
 // if (process.env.NODE_ENV === "production") {
@@ -137,4 +146,4 @@ app.use("/user",userRoute);//here we are using user routes
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
-})
+});

@@ -30,7 +30,7 @@ function Login() {
         }
       })
       .catch((err) => {
-        if(err.response){
+        if (err.response) {
           console.log(err);
           toast.error("Error: " + err.response.data.message);
         }
@@ -41,17 +41,18 @@ function Login() {
     <dialog id="my_modal_3" className="modal">
       <div className="modal-box dark:bg-slate-900 dark:text-white">
         <form onSubmit={handleSubmit(onSubmit)} method="dialog">
-        {/* ❌ Remove method="dialog" – it closes modal automatically */}
-        <Link to="/"
-          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-          onClick={() => document.getElementById("my_modal_3").close()}
-        >
-          ✕
-        </Link>
+          {/* ❌ Remove method="dialog" – it closes modal automatically */}
+          <Link
+            to="/"
+            className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+            onClick={() => document.getElementById("my_modal_3").close()}
+          >
+            ✕
+          </Link>
 
-        <h3 className="font-bold text-lg">Login</h3>
+          <h3 className="font-bold text-lg">Login</h3>
 
-        {/* ✅ Form wrapper */}
+          {/* ✅ Form wrapper */}
 
           {/* Email */}
           <div className="mt-4 space-y-2">
@@ -63,8 +64,12 @@ function Login() {
               className="w-80 px-3 py-1 border rounded-md outline-none dark:bg-slate-900 dark:text-white"
               {...register("email", { required: true })}
             />
-            <br/>
-            {errors.email && <span className="text-sm text-red-500">This field is required</span>}
+            <br />
+            {errors.email && (
+              <span className="text-sm text-red-500">
+                This field is required
+              </span>
+            )}
           </div>
 
           {/* Password */}
@@ -77,8 +82,12 @@ function Login() {
               className="w-80 px-3 py-1 border rounded-md outline-none dark:bg-slate-900 dark:text-white"
               {...register("password", { required: true })}
             />
-            <br/>
-            {errors.password && <span className="text-sm text-red-500">This field is required</span>}
+            <br />
+            {errors.password && (
+              <span className="text-sm text-red-500">
+                This field is required
+              </span>
+            )}
           </div>
 
           {/* Buttons */}
@@ -101,7 +110,6 @@ function Login() {
               </Link>
             </p>
           </div>
-
         </form>
       </div>
     </dialog>
