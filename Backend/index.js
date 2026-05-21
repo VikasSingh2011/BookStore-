@@ -2,11 +2,14 @@ import express from "express";//here we import the express module
 import mongoose from "mongoose";//importing mongoose to connect to mongoDB
 import dotenv from "dotenv";//to use .env file
 import cors from "cors";//importing cors to handle cross origin requests
-//import path from "path";//to work with file and directory paths
+import path from "path";
+import { fileURLToPath } from "url";
 
-import bookRoute from "./route/book.route.js";//importing book routes 
-import userRoute from "./route/user.route.js";//importing user routes
+import bookRoute from "./route/book.route.js";
+import userRoute from "./route/user.route.js";
 import Book from "./model/book.model.js";
+
+dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,11 +21,6 @@ app.use(cors());
 
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MongoDBURI;
-
-dotenv.config();//configure dotenv to use .env file
-
-const PORT = process.env.PORT || 4000;//this is default port if .env file is not working
-const URI = process.env.MongoDBURI;//mongoDB connection string
 
 //connect to mongoDB
 mongoose.connect(URI)
