@@ -10,7 +10,7 @@ function Course() {
   useEffect(() => {//now we call our backend api to get data
     const getBook = async()=>{//here we created an async function
       try{
-        const res = await axios.get("http://localhost:4001/book");//here we call the backend api.// we remove localhost from here for deployment 
+        const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/book`);//here we call the backend api.// we remove localhost from here for deployment
         console.log(res.data);
         setBook(res.data);//here we update the book variable with data from backend
       } catch(error){

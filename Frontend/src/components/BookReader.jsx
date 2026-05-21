@@ -260,7 +260,7 @@ By building a strong, aligned culture, your startup retains a high pace of progr
     if (!book) {
       const fetchBook = async () => {
         try {
-          const res = await axios.get("http://localhost:4001/book");
+          const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/book`);
           const found = res.data.find((b) => b._id === id || b.id === id);
           if (found) {
             setBook(found);

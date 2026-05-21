@@ -2,8 +2,6 @@ import express from "express";//here we import the express module
 import mongoose from "mongoose";//importing mongoose to connect to mongoDB
 import dotenv from "dotenv";//to use .env file
 import cors from "cors";//importing cors to handle cross origin requests
-import path from "path";
-import { fileURLToPath } from "url";
 
 import bookRoute from "./route/book.route.js";
 import userRoute from "./route/user.route.js";
@@ -11,13 +9,14 @@ import Book from "./model/book.model.js";
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 const PORT = process.env.PORT || 4000;
 const URI = process.env.MongoDBURI;
@@ -120,27 +119,10 @@ mongoose.connect(URI)
 app.use("/book", bookRoute);
 app.use("/user", userRoute);
 
-//  Serve frontend build (same as local)
-app.use(express.static(path.join(__dirname, "dist")));
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+// Health check route
+app.get("/", (req, res) => {
+  res.send("BookStore API is running!");
 });
-
-//deployment code
-// if (process.env.NODE_ENV === "production") {
-//   const dirPath = path.resolve();
-
-//   app.use(express.static(path.join(dirPath, "Frontend", "dist")));
-
-//   // catch-all handler (NO PATH STRING)
-//   app.use((req, res) => {
-//     res.sendFile(
-//       path.join(dirPath, "Frontend", "dist", "index.html")
-//     );
-//   });
-// }
-
-
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
