@@ -1,7 +1,7 @@
-import express from "express";//here we import the express module 
-import mongoose from "mongoose";//importing mongoose to connect to mongoDB
-import dotenv from "dotenv";//to use .env file
-import cors from "cors";//importing cors to handle cross origin requests
+import express from "express";
+import mongoose from "mongoose";
+import dotenv from "dotenv";
+import cors from "cors";
 
 import bookRoute from "./route/book.route.js";
 import userRoute from "./route/user.route.js";
@@ -18,13 +18,26 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4001;
 const URI = process.env.MongoDBURI;
 
-//connect to mongoDB
-mongoose.connect(URI)
-  .then(async () => {
+// --- Serverless-safe DB connection caching ---
+let isConnected = false;
+
+const connectDB = async () => {
+  if (isConnected) {
+    console.log("Using existing MongoDB connection");
+    return;
+  }
+  try {
+    await mongoose.connect(URI, {
+      serverSelectionTimeoutMS: 10000,
+      socketTimeoutMS: 45000,
+    });
+    isConnected = true;
     console.log("Connected to MongoDB");
+
+    // Seed books if DB is empty
     try {
       const count = await Book.countDocuments();
       if (count === 0) {
@@ -74,56 +87,39 @@ mongoose.connect(URI)
           }
         ];
         await Book.insertMany(seedBooks);
-        console.log("Seeding initial premium books finished successfully.");
+        console.log("Seeding finished successfully.");
       }
-
-      // Database migration to align existing book prices to the new $1-$5 rules
-      console.log("Running database price alignment migration...");
-      const existingBooks = await Book.find({});
-      for (const item of existingBooks) {
-        if (item.category === "Free") {
-          if (item.price !== 0) {
-            item.price = 0;
-            await item.save();
-            console.log(`Updated free book '${item.name}' price to $0`);
-          }
-        } else {
-          // If paid book price is outside the $1-$5 range, align it
-          if (item.price < 1 || item.price > 5) {
-            let newPrice = 3;
-            if (item.name === "React 19 Deep Dive") {
-              newPrice = 3;
-            } else if (item.name === "Interactive UI Animations") {
-              newPrice = 4;
-            } else if (item.name === "Zero to One Startup Guide") {
-              newPrice = 5;
-            } else {
-              newPrice = Math.max(1, Math.min(5, Math.floor(item.price / 100) || 3));
-            }
-            const oldPrice = item.price;
-            item.price = newPrice;
-            await item.save();
-            console.log(`Updated paid book '${item.name}' price to $${newPrice} (was ${oldPrice})`);
-          }
-        }
-      }
-      console.log("Database price alignment migration completed successfully.");
-    } catch (dbError) {
-      console.log("Error during database seeding/migration: ", dbError);
+    } catch (seedError) {
+      console.log("Error during seeding: ", seedError);
     }
-  })
-  .catch((error) => {
-    console.log("Error connecting to MongoDB: ", error);
-  });
 
-app.use("/book", bookRoute);
-app.use("/user", userRoute);
+  } catch (error) {
+    console.log("Error connecting to MongoDB: ", error);
+    isConnected = false;
+    throw error;
+  }
+};
+
+// Middleware: ensure DB is connected before every request
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(500).json({ message: "Database connection failed", error: error.message });
+  }
+});
 
 // Health check route
 app.get("/", (req, res) => {
   res.send("BookStore API is running!");
 });
 
+app.use("/book", bookRoute);
+app.use("/user", userRoute);
+
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
 });
+
+export default app;
