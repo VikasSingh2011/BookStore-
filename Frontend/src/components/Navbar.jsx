@@ -5,10 +5,23 @@ import { useState } from "react";
 import Login from "./Login";
 import Logout from "./Logout";
 import { useAuth } from "../context/AuthProvider";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [authUser, setAuthUser] = useAuth();
   console.log(authUser);
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const handleSearch = (e) => {
+    if (e.key === "Enter" || e.type === "click") {
+      if (searchQuery.trim() !== "") {
+        navigate(`/course?q=${encodeURIComponent(searchQuery)}`);
+      } else {
+        navigate(`/course`);
+      }
+    }
+  };
 
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
@@ -111,12 +124,16 @@ const Navbar = () => {
                     type="text"
                     className="grow outline-none bg-transparent text-sm"
                     placeholder="Search books..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onKeyDown={handleSearch}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 16 16"
                     fill="currentColor"
                     className="h-4 w-4 opacity-60 hover:opacity-100 transition-all duration-300 cursor-pointer"
+                    onClick={(e) => handleSearch(e)}
                   >
                     <path
                       fillRule="evenodd"

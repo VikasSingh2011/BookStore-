@@ -2,11 +2,15 @@ import React from "react";
 import Cards from "./Cards";
 // import list from "../../public/list.json";//now we will fetch data from backend instead of json file so now there is no use of this line.
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function Course() {
   const [book, setBook] = useState([])//here book is variable and setBook is function to update the variable
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const search = queryParams.get("q") || "";
+
   useEffect(() => {//now we call our backend api to get data
     const getBook = async()=>{//here we created an async function
       try{
@@ -37,9 +41,18 @@ function Course() {
           </Link>
         </div>
         <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {book.map((item) => (
-            <Cards key={item._id || item.id} item={item} />
-          ))}
+          {book
+            .filter((item) => {
+              if (!search) return true;
+              return (
+                item.name.toLowerCase().includes(search.toLowerCase()) ||
+                item.title.toLowerCase().includes(search.toLowerCase()) ||
+                item.category.toLowerCase().includes(search.toLowerCase())
+              );
+            })
+            .map((item) => (
+              <Cards key={item._id || item.id} item={item} />
+            ))}
         </div>
       </div>
     </>
